@@ -6,13 +6,24 @@ import MovieCard from "./components/MovieCard";
 function App() {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading,setLoading]=useState(false)
+
+  const Loading=()=>{
+    
+     return (
+     <h1>LOADING......</h1>
+     )
+    
+  }
 
   const api_url = "http://www.omdbapi.com/?i=tt3896198&apikey=cf79b36e";
 
   const getMovies = async (title) => {
+    setLoading(true)
     const res = await fetch(`${api_url}&s=${title}`);
     const data = await res.json();
     setMovies(data.Search);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -45,13 +56,19 @@ function App() {
           color={"white"}
         />
       </div>
-      {movies?.length > 0 ? (
+      {loading?<Loading/>:
+      (
+        movies?.length > 0 ? (
         <MovieCard movies={movies}></MovieCard>
       ) : (
         <div className="empty">
           <h2>no movies found</h2>
         </div>
-      )}
+      )
+      )
+      }
+      
+     
     </div>
   );
 }
